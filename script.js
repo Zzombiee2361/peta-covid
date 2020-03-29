@@ -7,7 +7,7 @@ else 					zoomLevel = 3;
 var map = L.map('map').setView([-2.5, 118], zoomLevel);
 L.tileLayer(
 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-	attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
+	attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a> | Made by Zzombiee2361. <a href="https://github.com/Zzombiee2361/peta-covid">Source Code</a>',
 	maxZoom: 18,
 }).addTo(map);
 
@@ -23,21 +23,14 @@ function loadData() {
 	});
 	$.when(
 		$.getJSON('indonesia-prov.geojson'),
-		$.ajax({ url: 'https://api.kawalcorona.com/indonesia/provinsi/', dataType: 'json' })
-	).then(function(json, data) {
+		$.getJSON('https://api.kawalcorona.com/indonesia/provinsi/'),
+		$.getJSON('https://api.kawalcorona.com/indonesia/')
+	).then(function(json, data, total) {
 		// ===== Process API data =====
 		var provinsi = [];
-		var total = {
-			Kasus_Posi: 0,
-			Kasus_Semb: 0,
-			Kasus_Meni: 0,
-		};
 		data[0].forEach((d) => {
 			d = d.attributes;
 			provinsi[d.Kode_Provi] = d;
-			total.Kasus_Posi += d.Kasus_Posi;
-			total.Kasus_Semb += d.Kasus_Semb;
-			total.Kasus_Meni += d.Kasus_Meni;
 		});
 
 		// ===== Map colors =====
@@ -121,9 +114,9 @@ function loadData() {
 				'<br />' + (data.Kasus_Semb || 0) + ' Sembuh'+
 				'<br />' + (data.Kasus_Meni || 0) + ' Meninggal'
 				: '<b>Total</b>'+
-				'<br />' + (total.Kasus_Posi || 0) + ' Positif'+
-				'<br />' + (total.Kasus_Semb || 0) + ' Sembuh'+
-				'<br />' + (total.Kasus_Meni || 0) + ' Meninggal');
+				'<br />' + (total[0][0].positif || 0) + ' Positif'+
+				'<br />' + (total[0][0].sembuh || 0) + ' Sembuh'+
+				'<br />' + (total[0][0].meninggal || 0) + ' Meninggal');
 		};
 
 		info.addTo(map);
