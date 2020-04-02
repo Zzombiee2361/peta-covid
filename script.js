@@ -35,10 +35,10 @@ function loadData() {
 
 		// ===== Map colors =====
 		var colors = ['#ffffcc','#ffeda0','#fed976','#feb24c','#fd8d3c','#fc4e2a','#e31a1c','#bd0026','#800026'];
-		var scales = [0, 5, 10, 20, 30, 50, 80, 100, 200];
+		var scales = [1, 5, 10, 20, 40, 80, 150, 300, 600];
 		function getColor(n) {
 			for (var i = scales.length-1; i >= 0; i--) {
-				if(n > scales[i]) {
+				if(n >= scales[i]) {
 					return colors[i];
 				}
 			}
